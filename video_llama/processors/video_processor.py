@@ -23,13 +23,18 @@ MAX_INT = registry.get("MAX_INT")
 decord.bridge.set_bridge("torch")
 
 def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
+    n_frms = 64
     decord.bridge.set_bridge("torch")
     vr = VideoReader(uri=video_path, height=height, width=width)
+    print("ld_video: %s " % (vr))
 
     vlen = len(vr)
+    print("ld_video: %d " % (vlen))
     start, end = 0, vlen
 
     n_frms = min(n_frms, vlen)
+    
+    print("n_frms: %d" % (n_frms))
 
     if sampling == "uniform":
         indices = np.arange(start, end, vlen / n_frms).astype(int).tolist()
@@ -40,8 +45,11 @@ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="unifor
     else:
         raise NotImplementedError
 
+    print("ld_indices: %s " % (indices))
+
     # get_batch -> T, H, W, C
     temp_frms = vr.get_batch(indices)
+    print("ld_temp_frms: %s " % (temp_frms))
     # print(type(temp_frms))
     tensor_frms = torch.from_numpy(temp_frms) if type(temp_frms) is not torch.Tensor else temp_frms
     frms = tensor_frms.permute(3, 0, 1, 2).float()  # (C, T, H, W)
@@ -53,6 +61,7 @@ def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="unifor
     sec = ", ".join([str(round(f / fps, 1)) for f in indices])
     # " " should be added in the start and end
     msg = f"The video contains {len(indices)} frames sampled at {sec} seconds. "
+    print("ld_frms: %s | msg: %s" % (frms, msg))
     return frms, msg
 
 

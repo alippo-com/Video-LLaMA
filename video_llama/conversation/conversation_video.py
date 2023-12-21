@@ -185,7 +185,10 @@ class Chat:
     def answer(self, conv, img_list, max_new_tokens=300, num_beams=1, min_length=1, top_p=0.9,
                repetition_penalty=1.0, length_penalty=1, temperature=1.0, max_length=2000):
         conv.append_message(conv.roles[1], None)
+        print("img_list: %s | num_beams: %s" % (img_list, num_beams))
         embs = self.get_context_emb(conv, img_list)
+
+        print("embs: %s" % (embs))
 
         current_max_len = embs.shape[1] + max_new_tokens
         if current_max_len - max_length > 0:
@@ -203,6 +206,7 @@ class Chat:
             stopping_criteria = StoppingCriteriaList([StoppingCriteriaSub(stops=stop_words_ids)])
 
         # stopping_criteria
+        print("stopping_criteria: %s" % (stopping_criteria))
         outputs = self.model.llama_model.generate(
             inputs_embeds=embs,
             max_new_tokens=max_new_tokens,
@@ -239,11 +243,12 @@ class Chat:
             # image = self.vis_processor(image).unsqueeze(0).to(self.device)
             video, msg = load_video(
                 video_path=video_path,
-                n_frms=8,
+                n_frms=64,
                 height=224,
                 width=224,
                 sampling ="uniform", return_msg = True
             )
+            print("video: %s | msg: %s" % (video, msg))
             video = self.vis_processor.transform(video)
             video = video.unsqueeze(0).to(self.device)
             # print(image)

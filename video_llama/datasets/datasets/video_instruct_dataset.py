@@ -55,7 +55,7 @@ class Video_Instruct_Dataset(BaseDataset):
         self.num_video_query_token = num_video_query_token
         self.vis_root = vis_root
         self.resize_size = 224
-        self.num_frm = 8
+        self.num_frm = 64
         self.tokenizer = LlamaTokenizer.from_pretrained(tokenizer_name, use_fast=False)
         self.tokenizer.pad_token = self.tokenizer.unk_token
         self.tokenizer.add_tokens([DEFAULT_IMAGE_PATCH_TOKEN], special_tokens=True)

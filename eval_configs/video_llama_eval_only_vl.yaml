@@ -26,7 +26,7 @@ datasets:
     vis_processor:
       train:
         name: "alpro_video_eval"
-        n_frms: 8
+        n_frms: 64
         image_size: 224
     text_processor:
       train:

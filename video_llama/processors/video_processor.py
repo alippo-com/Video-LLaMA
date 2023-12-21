@@ -23,7 +23,6 @@ MAX_INT = registry.get("MAX_INT")
 decord.bridge.set_bridge("torch")
 
 def load_video(video_path, n_frms=MAX_INT, height=-1, width=-1, sampling="uniform", return_msg = False):
-    n_frms = 64
     decord.bridge.set_bridge("torch")
     vr = VideoReader(uri=video_path, height=height, width=width)
     print("ld_video: %s " % (vr))
